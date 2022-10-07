@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: "hogwarts"
+      POSTGRES_USER: "student"
+      POSTGRES_PASSWORD: "chocolatefrog"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8181:8080
