@@ -2,10 +2,10 @@ package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.InvalidId;
-import ru.hogwarts.school.exception.NotFoundException;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -21,7 +21,7 @@ public class FacultyService {
     }
 
     public Faculty getFacultyById(Long facultyId) {
-        return facultyRepository.findById(facultyId).orElseThrow(NotFoundException::new);
+        return facultyRepository.findById(facultyId).orElseThrow(EntityNotFoundException::new);
     }
 
     public Faculty updateFaculty(Faculty faculty) {
