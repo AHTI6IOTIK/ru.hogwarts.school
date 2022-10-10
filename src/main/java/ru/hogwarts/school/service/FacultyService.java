@@ -2,61 +2,42 @@ package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.InvalidId;
-import ru.hogwarts.school.exception.NotFoundException;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class FacultyService {
-    private static Long counter = 0L;
-    private final Map<Long, Faculty> faculties;
+    private final FacultyRepository facultyRepository;
 
-    public FacultyService() {
-        faculties = new HashMap<>();
-    }
-
-    public FacultyService(Map<Long, Faculty> faculties) {
-        this.faculties = faculties;
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
     }
 
     public Faculty createFaculty(Faculty faculty) {
-        if (faculty.getId() <= counter) {
-            throw new InvalidId();
-        }
-        faculties.put(++counter, faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public Faculty getFacultyById(Long facultyId) {
-        if (!faculties.containsKey(facultyId)) {
-            throw new NotFoundException();
-        }
-        return faculties.get(facultyId);
+        return facultyRepository.findById(facultyId).orElseThrow(EntityNotFoundException::new);
     }
 
-    public Faculty updateFaculty(Long facultyId, Faculty faculty) {
-        Faculty innerFaculty = getFacultyById(facultyId);
-        return innerFaculty.fillByFaculty(faculty);
+    public Faculty updateFaculty(Faculty faculty) {
+        Faculty oldFaculty = facultyRepository.findById(faculty.getId()).orElseThrow(InvalidId::new);
+        return facultyRepository.save(oldFaculty.fillByFaculty(faculty));
     }
 
-    public Faculty deleteFaculty(Long facultyId) {
-        return faculties.remove(getFacultyById(facultyId).getId());
+    public void deleteFaculty(Long facultyId) {
+        facultyRepository.deleteById(facultyId);
     }
 
     public List<Faculty> findByColor(String color) {
-        return faculties
-            .values()
-            .stream()
-            .filter(f -> f.getColor().equals(color))
-            .collect(Collectors.toList());
+        return facultyRepository.findByColor(color);
     }
 
     public List<Faculty> getAll() {
-        return new ArrayList<>(faculties.values());
+        return facultyRepository.findAll();
     }
 }
