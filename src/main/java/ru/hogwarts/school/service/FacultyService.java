@@ -3,10 +3,12 @@ package ru.hogwarts.school.service;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.InvalidId;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class FacultyService {
@@ -37,7 +39,16 @@ public class FacultyService {
         return facultyRepository.findByColor(color);
     }
 
+    public List<Faculty> findByColorContainingIgnoreCase(String color) {
+        return facultyRepository.findByColorContainingIgnoreCase(color);
+    }
+
     public List<Faculty> getAll() {
         return facultyRepository.findAll();
+    }
+
+    public Set<Student> getFacultyStudents(Long facultyId) {
+        Faculty faculty = facultyRepository.findById(facultyId).orElseThrow(InvalidId::new);
+        return faculty.getStudents();
     }
 }

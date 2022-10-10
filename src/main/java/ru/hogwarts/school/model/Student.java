@@ -1,8 +1,8 @@
 package ru.hogwarts.school.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -12,6 +12,10 @@ public class Student {
     private Long id;
     private String name;
     private int age;
+
+    @ManyToOne
+    @JsonManagedReference
+    private Faculty faculty;
 
     public Student() {}
 
@@ -42,6 +46,21 @@ public class Student {
         return this;
     }
 
+    public Student fillByStudent(Student student) {
+        name = student.getName();
+        age = student.getAge();
+        return this;
+    }
+
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
+    public Student setFaculty(Faculty faculty) {
+        this.faculty = faculty;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,11 +72,5 @@ public class Student {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, age);
-    }
-
-    public Student fillByStudent(Student student) {
-        name = student.getName();
-        age = student.getAge();
-        return this;
     }
 }

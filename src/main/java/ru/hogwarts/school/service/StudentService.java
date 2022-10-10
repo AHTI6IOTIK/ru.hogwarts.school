@@ -2,6 +2,8 @@ package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.InvalidId;
+import ru.hogwarts.school.model.Faculty;
+
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
@@ -40,5 +42,14 @@ public class StudentService {
 
     public List<Student> getAll() {
         return studentRepository.findAll();
+    }
+
+    public List<Student> findByAgeBetween(int fromAge, int toAge) {
+        return studentRepository.findByAgeBetween(fromAge, toAge);
+    }
+
+    public Faculty getStudentsFaculty(Long studentId) {
+        Student student = studentRepository.findById(studentId).orElseThrow(EntityNotFoundException::new);
+        return student.getFaculty();
     }
 }
