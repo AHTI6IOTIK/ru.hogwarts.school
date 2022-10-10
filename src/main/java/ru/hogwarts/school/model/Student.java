@@ -13,6 +13,9 @@ public class Student {
     private String name;
     private int age;
 
+    @OneToOne
+    private Avatar avatar;
+
     @ManyToOne
     @JsonManagedReference
     private Faculty faculty;
@@ -58,6 +61,15 @@ public class Student {
 
     public Student setFaculty(Faculty faculty) {
         this.faculty = faculty;
+        return this;
+    }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public Student setAvatar(Avatar avatar) {
+        this.avatar = avatar;
         return this;
     }
 
