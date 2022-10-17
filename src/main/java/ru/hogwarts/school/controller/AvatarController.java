@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 @RestController
 @RequestMapping("/avatar")
@@ -23,6 +24,14 @@ public class AvatarController {
 
     public AvatarController(AvatarService avatarService) {
         this.avatarService = avatarService;
+    }
+
+    @GetMapping
+    public List<Avatar> getAvatars(@RequestParam int pageNum, @RequestParam int pageSize) {
+        if (pageNum <= 0) {
+            pageNum = 1;
+        }
+        return avatarService.getAvatars(pageNum, pageSize);
     }
 
     @PostMapping(value ="/{studentId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

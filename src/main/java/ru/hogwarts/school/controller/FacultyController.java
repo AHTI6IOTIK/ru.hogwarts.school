@@ -44,6 +44,11 @@ public class FacultyController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{facultyId}/students/count")
+    public int getCountStudents(@PathVariable Long facultyId) {
+        return facultyService.getFacultyStudentsCount(facultyId);
+    }
+
     @GetMapping("/find")
     public List<Faculty> find(@RequestParam String color) {
         return facultyService.findByColor(color);

@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +15,7 @@ import javax.persistence.EntityNotFoundException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -85,5 +87,10 @@ public class AvatarService {
 
     public boolean isCorrectFileSize(long size) {
         return size > SIZE_LIMIT;
+    }
+
+    public List<Avatar> getAvatars(int pageNum, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
+        return avatarRepository.findAll(pageRequest).getContent();
     }
 }

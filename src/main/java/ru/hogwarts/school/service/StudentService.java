@@ -52,4 +52,12 @@ public class StudentService {
         Student student = studentRepository.findById(studentId).orElseThrow(EntityNotFoundException::new);
         return student.getFaculty();
     }
+
+    public int getAvgAgeStudents() {
+        return studentRepository.getAvgAgeStudents();
+    }
+
+    public List<Student> getLastStudentBySize(int size) {
+        return studentRepository.getLastFiveStudents(size);
+    }
 }
