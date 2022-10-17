@@ -1,7 +1,5 @@
 package ru.hogwarts.school.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -17,7 +15,7 @@ public class Student {
     private Avatar avatar;
 
     @ManyToOne
-    @JsonManagedReference
+//    @JsonManagedReference
     private Faculty faculty;
 
     public Student() {}
