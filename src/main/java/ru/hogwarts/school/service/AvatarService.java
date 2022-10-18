@@ -1,6 +1,7 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -89,8 +90,8 @@ public class AvatarService {
         return size > SIZE_LIMIT;
     }
 
-    public List<Avatar> getAvatars(int pageNum, int pageSize) {
+    public Page<Avatar> getAvatars(int pageNum, int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNum - 1, pageSize);
-        return avatarRepository.findAll(pageRequest).getContent();
+        return avatarRepository.findAll(pageRequest);
     }
 }

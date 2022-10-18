@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,7 +28,7 @@ public class AvatarController {
     }
 
     @GetMapping
-    public List<Avatar> getAvatars(@RequestParam int pageNum, @RequestParam int pageSize) {
+    public Page<Avatar> getAvatars(@RequestParam int pageNum, @RequestParam int pageSize) {
         if (pageNum <= 0) {
             pageNum = 1;
         }
