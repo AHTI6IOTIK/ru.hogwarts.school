@@ -5,6 +5,7 @@ import ru.hogwarts.school.exception.InvalidId;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
+import ru.hogwarts.school.repository.StudentRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -13,9 +14,14 @@ import java.util.Set;
 @Service
 public class FacultyService {
     private final FacultyRepository facultyRepository;
+    private final StudentRepository studentRepository;
 
-    public FacultyService(FacultyRepository facultyRepository) {
+    public FacultyService(
+        FacultyRepository facultyRepository,
+        StudentRepository studentRepository
+    ) {
         this.facultyRepository = facultyRepository;
+        this.studentRepository = studentRepository;
     }
 
     public Faculty createFaculty(Faculty faculty) {
@@ -50,5 +56,10 @@ public class FacultyService {
     public Set<Student> getFacultyStudents(Long facultyId) {
         Faculty faculty = facultyRepository.findById(facultyId).orElseThrow(InvalidId::new);
         return faculty.getStudents();
+    }
+
+    public int getFacultyStudentsCount(Long facultyId) {
+        Faculty faculty = facultyRepository.findById(facultyId).orElseThrow(InvalidId::new);
+        return studentRepository.getStudentsCountByFaculty(faculty.getId());
     }
 }
