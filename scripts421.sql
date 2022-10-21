@@ -13,7 +13,9 @@ CREATE TABLE human
     id        bigserial primary key,
     name      varchar(125) NOT NULL,
     age       int          NOT NULL,
-    is_driver boolean DEFAULT false
+    is_driver boolean DEFAULT false,
+    car_id int CHECK ( is_driver = true ),
+    FOREIGN KEY (car_id) REFERENCES car (id)
 );
 
 CREATE TABLE car
@@ -21,9 +23,7 @@ CREATE TABLE car
     id       bigserial primary key,
     brand    varchar(125) NOT NULL,
     model    varchar(125) NOT NULL,
-    price    decimal,
-    human_id int,
-    FOREIGN KEY (human_id) REFERENCES human (id)
+    price    decimal
 );
 
 SELECT f.name, s.name, s.age FROM faculty f
