@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.exception.InvalidId;
 import ru.hogwarts.school.model.Faculty;
@@ -15,49 +17,71 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
 
+    private final Logger logger;
+
     public StudentService(StudentRepository studentRepository) {
+        this.logger = LoggerFactory.getLogger(FacultyService.class);
         this.studentRepository = studentRepository;
     }
 
     public Student createStudent(Student student) {
+        logger.info("Was invoked method for student createFaculty");
         return studentRepository.save(student);
     }
 
     public Student getStudentById(Long studentId) {
-        return studentRepository.findById(studentId).orElseThrow(EntityNotFoundException::new);
+        logger.info("Was invoked method for student getStudentById");
+        return studentRepository.findById(studentId).orElseThrow(() -> {
+            logger.error("There is not student with id = " + studentId);
+            return new EntityNotFoundException();
+        });
     }
 
     public Student updateStudent(Student student) {
-        Student oldStudent = studentRepository.findById(student.getId()).orElseThrow(InvalidId::new);
+        logger.info("Was invoked method for student updateStudent");
+        Student oldStudent = studentRepository.findById(student.getId()).orElseThrow(() -> {
+            logger.error("There is not student with id = " + student.getId());
+            return new InvalidId();
+        });
         return studentRepository.save(oldStudent.fillByStudent(student));
     }
 
     public void deleteStudent(Long studentId) {
+        logger.info("Was invoked method for student deleteStudent");
         studentRepository.deleteById(studentId);
     }
 
     public List<Student> findByAge(int age) {
+        logger.info("Was invoked method for student findByAge");
         return studentRepository.findByAge(age);
     }
 
     public List<Student> getAll() {
+        logger.info("Was invoked method for student getAll");
         return studentRepository.findAll();
     }
 
     public List<Student> findByAgeBetween(int fromAge, int toAge) {
+        logger.info("Was invoked method for student findByAgeBetween");
         return studentRepository.findByAgeBetween(fromAge, toAge);
     }
 
     public Faculty getStudentsFaculty(Long studentId) {
-        Student student = studentRepository.findById(studentId).orElseThrow(EntityNotFoundException::new);
+        logger.info("Was invoked method for student getStudentsFaculty");
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> {
+            logger.error("There is not student with id = " + studentId);
+            return new EntityNotFoundException();
+        });
         return student.getFaculty();
     }
 
     public int getAvgAgeStudents() {
+        logger.info("Was invoked method for student getAvgAgeStudents");
         return studentRepository.getAvgAgeStudents();
     }
 
     public List<Student> getLastStudentBySize(int size) {
+        logger.info("Was invoked method for student getLastStudentBySize");
         return studentRepository.getLastFiveStudents(size);
     }
 }
