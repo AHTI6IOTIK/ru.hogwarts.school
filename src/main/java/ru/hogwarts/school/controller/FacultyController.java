@@ -63,4 +63,9 @@ public class FacultyController {
     public Set<Student> getStudentsFaculties(@PathVariable Long facultyId) {
         return facultyService.getFacultyStudents(facultyId);
     }
+
+    @GetMapping("/name/long")
+    public String getFacultyWithLongName() {
+        return facultyService.getFacultyWithLongName();
+    }
 }
