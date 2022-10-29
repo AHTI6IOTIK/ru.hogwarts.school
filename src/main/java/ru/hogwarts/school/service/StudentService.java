@@ -101,4 +101,54 @@ public class StudentService {
             .orElse(0)
         ;
     }
+
+    public void printStudentsFromStream() {
+        List<Student> students = studentRepository.findAll();
+        print(students.get(0).getName());
+        print(students.get(1).getName());
+
+        new Thread(() -> {
+            print(students.get(2).getName());
+            print(students.get(3).getName());
+        }).start();
+
+        new Thread(() -> {
+            print(students.get(4).getName());
+            print(students.get(5).getName());
+        }).start();
+    }
+
+    public void printStudentsFromStreamSynchronize() {
+        List<Student> students = studentRepository.findAll();
+        synchronizedPrint(students.get(0).getName());
+        synchronizedPrint(students.get(1).getName());
+
+        new Thread(() -> {
+            synchronizedPrint(students.get(2).getName());
+            synchronizedPrint(students.get(3).getName());
+        }).start();
+
+        new Thread(() -> {
+            synchronizedPrint(students.get(4).getName());
+            synchronizedPrint(students.get(5).getName());
+        }).start();
+    }
+
+    private void print(String name) {
+        System.out.println(name);
+
+        String s = "";
+        for (int i = 0; i < 100_000; i++) {
+            s += i;
+        }
+    }
+
+    private synchronized void synchronizedPrint(String name) {
+        System.out.println(name);
+
+        String s = "";
+        for (int i = 0; i < 100_000; i++) {
+            s += i;
+        }
+    }
 }
