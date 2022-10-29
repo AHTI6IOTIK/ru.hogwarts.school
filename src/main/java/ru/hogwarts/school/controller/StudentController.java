@@ -67,4 +67,15 @@ public class StudentController {
     public List<Student> getAvgAgeStudents(@PathVariable int size) {
         return studentService.getLastStudentBySize(size);
     }
+
+    @GetMapping("/age/avg")
+    public ResponseEntity<Double> getStudentsAvgAge() {
+        return ResponseEntity.ok(studentService.getStudentsAvgAge());
+    }
+
+    @GetMapping("/name/start")
+    public List<String> getStudentsStartNameBySymbol(@RequestParam String symbol) {
+        symbol = symbol.substring(0, 1);
+        return studentService.findStudentsStartNameBySymbol(symbol);
+    }
 }
