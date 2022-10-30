@@ -78,4 +78,14 @@ public class StudentController {
         symbol = symbol.substring(0, 1);
         return studentService.findStudentsStartNameBySymbol(symbol);
     }
+
+    @GetMapping("/stream")
+    public void testStreams() {
+        studentService.printStudentsFromStream();
+    }
+
+    @GetMapping("/stream/synchronize")
+    public void testStreamsSynchronize() {
+        studentService.printStudentsFromStreamSynchronize();
+    }
 }

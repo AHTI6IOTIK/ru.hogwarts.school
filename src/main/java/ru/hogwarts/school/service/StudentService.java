@@ -101,4 +101,55 @@ public class StudentService {
             .orElse(0)
         ;
     }
+
+    public void printStudentsFromStream() {
+        List<List<Student>> partitionedStudents = getPartitionedStudents();
+        for (int i = 0; i < partitionedStudents.size(); i++) {
+            List<Student> studentsBatch = partitionedStudents.get(i);
+            if (i < 1) {
+                print(studentsBatch);
+            } else {
+                new Thread(() -> print(studentsBatch)).start();
+            }
+        }
+    }
+
+    public void printStudentsFromStreamSynchronize() {
+        List<List<Student>> partitionedStudents = getPartitionedStudents();
+        for (int i = 0; i < partitionedStudents.size(); i++) {
+            List<Student> studentsBatch = partitionedStudents.get(i);
+            if (i < 1) {
+                synchronizedPrint(studentsBatch);
+            } else {
+                new Thread(() -> synchronizedPrint(studentsBatch)).start();
+            }
+        }
+    }
+
+    private List<List<Student>> getPartitionedStudents() {
+        List<Student> students = studentRepository.findAll();
+        return CollectionsService.split(students, 3);
+    }
+
+    private void print(List<Student> students) {
+        for (Student student : students) {
+            System.out.println(student.getName());
+        }
+
+        String s = "";
+        for (int i = 0; i < 100_000; i++) {
+            s += i;
+        }
+    }
+
+    private synchronized void synchronizedPrint(List<Student> students) {
+        for (Student student : students) {
+            System.out.println(student.getName());
+        }
+
+        String s = "";
+        for (int i = 0; i < 100_000; i++) {
+            s += i;
+        }
+    }
 }
