@@ -103,39 +103,38 @@ public class StudentService {
     }
 
     public void printStudentsFromStream() {
-        List<Student> students = studentRepository.findAll();
-        print(students.get(0).getName());
-        print(students.get(1).getName());
-
-        new Thread(() -> {
-            print(students.get(2).getName());
-            print(students.get(3).getName());
-        }).start();
-
-        new Thread(() -> {
-            print(students.get(4).getName());
-            print(students.get(5).getName());
-        }).start();
+        List<List<Student>> partitionedStudents = getPartitionedStudents();
+        for (int i = 0; i < partitionedStudents.size(); i++) {
+            List<Student> studentsBatch = partitionedStudents.get(i);
+            if (i < 1) {
+                print(studentsBatch);
+            } else {
+                new Thread(() -> print(studentsBatch)).start();
+            }
+        }
     }
 
     public void printStudentsFromStreamSynchronize() {
-        List<Student> students = studentRepository.findAll();
-        synchronizedPrint(students.get(0).getName());
-        synchronizedPrint(students.get(1).getName());
-
-        new Thread(() -> {
-            synchronizedPrint(students.get(2).getName());
-            synchronizedPrint(students.get(3).getName());
-        }).start();
-
-        new Thread(() -> {
-            synchronizedPrint(students.get(4).getName());
-            synchronizedPrint(students.get(5).getName());
-        }).start();
+        List<List<Student>> partitionedStudents = getPartitionedStudents();
+        for (int i = 0; i < partitionedStudents.size(); i++) {
+            List<Student> studentsBatch = partitionedStudents.get(i);
+            if (i < 1) {
+                synchronizedPrint(studentsBatch);
+            } else {
+                new Thread(() -> synchronizedPrint(studentsBatch)).start();
+            }
+        }
     }
 
-    private void print(String name) {
-        System.out.println(name);
+    private List<List<Student>> getPartitionedStudents() {
+        List<Student> students = studentRepository.findAll();
+        return CollectionsService.split(students, 3);
+    }
+
+    private void print(List<Student> students) {
+        for (Student student : students) {
+            System.out.println(student.getName());
+        }
 
         String s = "";
         for (int i = 0; i < 100_000; i++) {
@@ -143,8 +142,10 @@ public class StudentService {
         }
     }
 
-    private synchronized void synchronizedPrint(String name) {
-        System.out.println(name);
+    private synchronized void synchronizedPrint(List<Student> students) {
+        for (Student student : students) {
+            System.out.println(student.getName());
+        }
 
         String s = "";
         for (int i = 0; i < 100_000; i++) {
